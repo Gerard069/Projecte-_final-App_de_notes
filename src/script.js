@@ -1,173 +1,207 @@
-// === CONFIGURACIÓN FIREBASE ===
+// 1. CONFIGURACIÓN (Pon tus datos aquí)
 const firebaseConfig = {
   apiKey: "TU_API_KEY",
   projectId: "TU_ID_PROYECTO",
-  appId: "TU_APP_ID"
+  appId: "TU_APP_ID",
 };
 
-// Inicializar Firebase si no existe
+// 2. INICIALIZACIÓN
 if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
+  firebase.initializeApp(firebaseConfig);
 }
 const db = firebase.firestore();
 
-// === IDENTIFICACIÓN DE USUARIO ===
-let userId = localStorage.getItem('app_user_id');
-if (!userId) {
-  userId = 'user_' + Math.random().toString(36).substr(2, 9);
-  localStorage.setItem('app_user_id', userId);
-}
+let userId =
+  localStorage.getItem("app_user_id") ||
+  "user_" + Math.random().toString(36).substr(2, 9);
+localStorage.setItem("app_user_id", userId);
 
-let myChart;
+let myChart = null;
 let subjects = [];
+let allGrades = [];
 
-// === INICIO DE LA APP ===
-window.onload = () => {
-  // Escuchar Materias guardadas
-  db.collection("materias").where("uid", "==", userId).orderBy("name")
-    .onSnapshot(snap => {
-      subjects = snap.docs.map(doc => doc.data().name);
-      updateDropdown();
-    });
+// 3. NAVEGACIÓN (FORZADO A WINDOW)
+window.switchView = function (viewName, element) {
+  document.getElementById("view-home").classList.add("hidden");
+  document.getElementById("view-ranks").classList.add("hidden");
+  document.getElementById("btn-home").classList.remove("active");
+  document.getElementById("btn-ranks").classList.remove("active");
 
-  // Escuchar Notas guardadas
-  db.collection("notas").where("uid", "==", userId).orderBy("date", "asc")
-    .onSnapshot(snap => {
-      const data = snap.docs.map(doc => doc.data());
-      renderDashboard(data);
-    });
-
-  // Escuchar Tareas
-  db.collection("tareas").where("uid", "==", userId)
-    .onSnapshot(snap => {
-      renderTasks(snap.docs.map(doc => ({id: doc.id, ...doc.data()})));
-    });
+  document.getElementById("view-" + viewName).classList.remove("hidden");
+  element.classList.add("active");
 };
 
-// === LÓGICA DEL DESPLEGABLE DINÁMICO ===
-function updateDropdown() {
-  const sel = document.getElementById('select-materia');
-  sel.innerHTML = `
-    <option value="">Seleccionar...</option>
-    <option value="NEW_SUBJECT" style="font-weight: bold; color: #007AFF;">+ Añadir nueva materia...</option>
-  `;
-  
-  subjects.forEach(s => {
-    const op = document.createElement('option');
-    op.value = s;
-    op.innerText = s;
-    sel.appendChild(op);
+// 4. GESTIÓN DE MATERIAS Y NOTAS
+window.handleSubjectChange = async function (val) {
+  if (val === "NEW_SUBJECT") {
+    const name = prompt("Nombre de la nueva materia:");
+    if (name && name.trim() !== "") {
+      await db.collection("materias").add({ uid: userId, name: name.trim() });
+    }
+    document.getElementById("select-materia").value = "";
+  }
+};
+
+window.openModal = () =>
+  document.getElementById("modal-nota").classList.remove("hidden");
+window.closeModal = () =>
+  document.getElementById("modal-nota").classList.add("hidden");
+
+window.saveGrade = async function () {
+  const sub = document.getElementById("select-materia").value;
+  const val = parseFloat(document.getElementById("input-nota").value);
+
+  if (sub && !isNaN(val)) {
+    await db.collection("notas").add({
+      uid: userId,
+      subject: sub,
+      value: val,
+      date: Date.now(),
+    });
+    window.closeModal();
+    document.getElementById("input-nota").value = "";
+  } else {
+    alert("Completa los campos correctamente");
+  }
+};
+
+// 5. RANGOS Y LÓGICA
+function getRankInfo(avg) {
+  if (avg >= 9)
+    return { name: "LEYENDA", color: "#FFD700", icon: "👑", bg: "#FFF9E6" };
+  if (avg >= 7)
+    return { name: "MAESTRO", color: "#A855F7", icon: "🔮", bg: "#F5F3FF" };
+  if (avg >= 5)
+    return { name: "GUERRERO", color: "#3B82F6", icon: "⚔️", bg: "#EFF6FF" };
+  return { name: "APRENDIZ", color: "#6B7280", icon: "🛡️", bg: "#F3F4F6" };
+}
+
+function updateRanks() {
+  const container = document.getElementById("ranks-container");
+  if (!container) return;
+  container.innerHTML = "";
+
+  subjects.forEach((sub) => {
+    const subGrades = allGrades.filter((g) => g.subject === sub);
+    const avg = subGrades.length
+      ? subGrades.reduce((a, b) => a + b.value, 0) / subGrades.length
+      : 0;
+    const rank = getRankInfo(avg);
+
+    container.innerHTML += `
+      <div class="rank-card">
+        <div class="rank-icon" style="background: ${rank.bg}; color: ${rank.color}">${rank.icon}</div>
+        <div style="flex: 1">
+          <h4 style="margin: 0; font-size: 16px;">${sub}</h4>
+          <span style="color: ${rank.color}; font-size: 11px; font-weight: bold;">${rank.name}</span>
+        </div>
+        <div style="text-align: right">
+          <strong style="font-size: 18px;">${avg.toFixed(1)}</strong>
+        </div>
+      </div>
+    `;
   });
 }
 
-async function handleSubjectChange(value) {
-  if (value === "NEW_SUBJECT") {
-    const name = prompt("Escribe el nombre de la nueva materia:");
-    if (name && name.trim() !== "") {
-      const formattedName = name.trim();
-      // Guardar solo si no existe ya
-      if (!subjects.includes(formattedName)) {
-        await db.collection("materias").add({ uid: userId, name: formattedName });
-        // Se autoselecciona tras un pequeño delay para dejar que cargue
-        setTimeout(() => {
-            document.getElementById('select-materia').value = formattedName;
-        }, 500);
-      } else {
-        document.getElementById('select-materia').value = formattedName;
-      }
-    } else {
-      document.getElementById('select-materia').value = "";
-    }
-  }
-}
+// 6. ESCUCHA DE DATOS (REAL-TIME)
+function initApp() {
+  // Estado de conexión
+  document.getElementById("sync-text").innerText = "Sincronizado";
+  document.getElementById("sync-dot").style.background = "#34C759";
 
-// === FUNCIONES MODAL Y GUARDADO ===
-function openModal() { document.getElementById('modal-nota').classList.remove('hidden'); }
-function closeModal() { 
-  document.getElementById('modal-nota').classList.add('hidden');
-  document.getElementById('select-materia').value = "";
-  document.getElementById('input-nota').value = "";
-}
-
-function saveGrade() {
-  const sub = document.getElementById('select-materia').value;
-  const val = parseFloat(document.getElementById('input-nota').value);
-  
-  if (sub && sub !== "NEW_SUBJECT" && !isNaN(val)) {
-    db.collection("notas").add({ 
-      uid: userId, 
-      subject: sub, 
-      value: val, 
-      date: Date.now() 
+  // Materias
+  db.collection("materias")
+    .where("uid", "==", userId)
+    .orderBy("name")
+    .onSnapshot((snap) => {
+      subjects = snap.docs.map((doc) => doc.data().name);
+      const sel = document.getElementById("select-materia");
+      sel.innerHTML = `<option value="">Seleccionar...</option><option value="NEW_SUBJECT">+ Añadir nueva...</option>`;
+      subjects.forEach((s) => {
+        sel.innerHTML += `<option value="${s}">${s}</option>`;
+      });
+      updateRanks();
     });
-    closeModal();
-  } else {
-    alert("Selecciona una materia válida y escribe una nota.");
-  }
+
+  // Notas
+  db.collection("notas")
+    .where("uid", "==", userId)
+    .orderBy("date", "asc")
+    .onSnapshot((snap) => {
+      allGrades = snap.docs.map((doc) => doc.data());
+
+      // Update Media
+      if (allGrades.length > 0) {
+        const totalAvg =
+          allGrades.reduce((a, b) => a + b.value, 0) / allGrades.length;
+        document.getElementById("media-display").innerText =
+          totalAvg.toFixed(1);
+      }
+
+      // Update Lista
+      const list = document.getElementById("recent-grades-list");
+      list.innerHTML = allGrades
+        .slice(-4)
+        .reverse()
+        .map(
+          (g) => `
+        <div class="grade-row"><span>${g.subject}</span><strong>${g.value}</strong></div>
+      `,
+        )
+        .join("");
+
+      updateRanks();
+      updateChart();
+    });
+
+  // Tareas
+  db.collection("tareas")
+    .where("uid", "==", userId)
+    .onSnapshot((snap) => {
+      const list = document.getElementById("tasks-list");
+      list.innerHTML = snap.docs
+        .map((doc) => {
+          const t = doc.data();
+          return `<li class="task-item" onclick="deleteTask('${doc.id}')"><div class="checkbox"></div><span>${t.title}</span></li>`;
+        })
+        .join("");
+    });
 }
 
-// === RENDERIZADO DE DATOS Y GRÁFICO ===
-function renderDashboard(data) {
-  if(data.length > 0) {
-    const avg = data.reduce((a, b) => a + b.value, 0) / data.length;
-    document.getElementById('media-display').innerText = avg.toFixed(1).replace('.', ',');
-  }
-  
-  const list = document.getElementById('recent-grades-list');
-  list.innerHTML = data.slice(-4).reverse().map(g => `
-    <div class="grade-row">
-      <span>${g.subject}</span>
-      <strong>${g.value.toString().replace('.', ',')}</strong>
-    </div>
-  `).join('');
+window.addNewTask = function () {
+  const t = prompt("Nueva tarea:");
+  if (t) db.collection("tareas").add({ uid: userId, title: t });
+};
 
-  updateChart(data);
-}
+window.deleteTask = (id) => db.collection("tareas").doc(id).delete();
 
-function updateChart(data) {
-  const ctx = document.getElementById('gradeChart').getContext('2d');
+function updateChart() {
+  const ctx = document.getElementById("gradeChart").getContext("2d");
   if (myChart) myChart.destroy();
   myChart = new Chart(ctx, {
-    type: 'line',
+    type: "line",
     data: {
-      labels: data.map((_, i) => i + 1),
-      datasets: [{
-        data: data.map(g => g.value),
-        borderColor: '#007AFF',
-        tension: 0.4,
-        borderWidth: 3,
-        pointRadius: 4,
-        pointBackgroundColor: '#007AFF'
-      }]
+      labels: allGrades.map((_, i) => i + 1),
+      datasets: [
+        {
+          data: allGrades.map((g) => g.value),
+          borderColor: "#007AFF",
+          tension: 0.4,
+          borderWidth: 3,
+          pointRadius: 0,
+          fill: true,
+          backgroundColor: "rgba(0, 122, 255, 0.1)",
+        },
+      ],
     },
-    options: { 
+    options: {
       responsive: true,
       maintainAspectRatio: false,
       plugins: { legend: { display: false } },
-      scales: { 
-        y: { min: 0, max: 10, ticks: { stepSize: 2 } }, 
-        x: { display: false } 
-      }
-    }
+      scales: { x: { display: false }, y: { min: 0, max: 10 } },
+    },
   });
 }
 
-// === TAREAS ===
-function addNewTask() {
-  const t = prompt("Tarea pendiente:");
-  if (t) db.collection("tareas").add({ uid: userId, title: t });
-}
-
-function deleteTask(id) {
-  db.collection("tareas").doc(id).delete();
-}
-
-function renderTasks(data) {
-  const list = document.getElementById('tasks-list');
-  list.innerHTML = data.map(t => `
-    <li class="task-item" onclick="deleteTask('${t.id}')">
-      <div class="checkbox"></div>
-      <span>${t.title}</span>
-    </li>
-  `).join('');
-}
+// Arrancar
+initApp();
