@@ -1,0 +1,63 @@
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+
+<div class="phone-frame">
+    <div class="phone-notch"></div>
+    
+    <div id="view-home" class="screen-content active">
+        <div class="panel notes-section" onclick="showPage('view-ranges')">
+            <h2 class="panel-title">Notas (Pulsa para Rangos)</h2>
+            <div class="graph-container">
+                <svg viewBox="0 0 100 50" preserveAspectRatio="none" class="sketchy-graph">
+                    <polyline fill="none" stroke="black" stroke-width="2" points="10,40 25,30 35,35 45,25 55,30 65,15 75,25 85,10" />
+                </svg>
+            </div>
+        </div>
+
+        <div class="middle-row">
+            <div class="panel latest-notes">
+                <h3 class="panel-title-small">Últimas notas</h3>
+                <ul id="notes-list" class="sketchy-list"></ul>
+            </div>
+            <div class="panel average">
+                <h3 class="panel-title-small">Media</h3>
+                <div id="average-value" class="big-number">--</div>
+            </div>
+        </div>
+
+        <div class="panel tasks-section">
+            <h2 class="panel-title">Tareas</h2>
+            <ul id="tasks-list" class="sketchy-list tasks-list"></ul>
+        </div>
+    </div>
+
+    <div id="view-ranges" class="screen-content">
+        <div class="panel">
+            <h2 class="panel-title">Rangos de Notas</h2>
+            <ul class="sketchy-list range-list">
+                <li><span class="range-box red"></span> 0 - 4.9: Insuficiente</li>
+                <li><span class="range-box yellow"></span> 5.0 - 6.9: Aprobado</li>
+                <li><span class="range-box blue"></span> 7.0 - 8.9: Notable</li>
+                <li><span class="range-box green"></span> 9.0 - 10: Sobresaliente</li>
+            </ul>
+            <button class="sketchy-btn" onclick="showPage('view-home')" style="margin-top:20px; width:100%">Volver al Inicio</button>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <div class="nav-item" onclick="showPage('view-home')">🏠</div>
+        <div class="nav-item plus-item" id="plus-btn"><div class="plus-circle">+</div></div>
+        <div class="nav-item" onclick="showPage('view-ranges')">📊</div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="add-note-modal">
+    <div class="modal-content panel">
+        <h3>Añadir Nota</h3>
+        <input type="text" id="sub-in" placeholder="Materia">
+        <input type="number" id="grade-in" placeholder="Nota" min="0" max="10">
+        <div class="modal-buttons">
+            <button class="sketchy-btn" id="cancel-btn">No</button>
+            <button class="sketchy-btn" id="save-btn">Añadir</button>
+        </div>
+    </div>
+</div>
