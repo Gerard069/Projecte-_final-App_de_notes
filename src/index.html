@@ -1,44 +1,66 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-firestore-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <div id="app">
   <div class="status-bar">
-    <span>Sincronización Activa</span>
-    <div class="dot"></div>
+    <span id="sync-text">Conectando...</span>
+    <div class="dot" id="sync-dot" style="background: #FF9500;"></div>
   </div>
 
-  <main>
-    <div class="widget average-card">
-      <span class="label">MI NOTA MEDIA</span>
-      <h2 id="media-display">0.0</h2>
-    </div>
-
-    <div class="widget chart-container">
-      <canvas id="gradeChart"></canvas>
-    </div>
-
-    <div class="widget">
-      <div class="header-row">
-        <h3>Últimas Notas</h3>
-        <button class="btn-main" onclick="openModal()">+ Añadir</button>
+  <section id="view-home" class="view">
+    <main>
+      <div class="widget average-card">
+        <span class="label">MI NOTA MEDIA</span>
+        <h2 id="media-display">0.0</h2>
       </div>
-      <ul id="recent-grades-list"></ul>
-    </div>
 
-    <div class="widget task-widget">
-      <div class="header-row">
-        <h3>Tareas Pendientes</h3>
-        <button class="add-task-btn" onclick="addNewTask()">+</button>
+      <div class="widget chart-container" style="height: 180px; position: relative;">
+        <canvas id="gradeChart"></canvas>
       </div>
-      <ul id="tasks-list"></ul>
+
+      <div class="widget">
+        <div class="header-row">
+          <h3>Últimas Notas</h3>
+          <button class="btn-main" onclick="openModal()">+ Añadir</button>
+        </div>
+        <ul id="recent-grades-list"></ul>
+      </div>
+
+      <div class="widget task-widget">
+        <div class="header-row">
+          <h3>Tareas Pendientes</h3>
+          <button class="add-task-btn" onclick="addNewTask()">+</button>
+        </div>
+        <ul id="tasks-list"></ul>
+      </div>
+    </main>
+  </section>
+
+  <section id="view-ranks" class="view hidden">
+    <div class="header-padding">
+      <h2 style="margin: 20px 15px; font-size: 28px; color: #1C1C1E;">Mis Rangos</h2>
     </div>
-  </main>
+    <div id="ranks-container">
+      <p style="text-align:center; color:#8E8E93; margin-top:50px;">Añade notas para ver tus rangos</p>
+    </div>
+  </section>
+
+  <nav class="tab-bar">
+    <div class="tab-item active" id="btn-home" onclick="switchView('home', this)">
+      <i class="fa-solid fa-house"></i>
+      <span>Inicio</span>
+    </div>
+    <div class="tab-item" id="btn-ranks" onclick="switchView('ranks', this)">
+      <i class="fa-solid fa-medal"></i>
+      <span>Rangos</span>
+    </div>
+  </nav>
 
   <div id="modal-nota" class="modal-overlay hidden">
     <div class="modal-content">
       <h3>Nueva Calificación</h3>
-      
       <div class="field">
         <label>Asignatura</label>
         <select id="select-materia" onchange="handleSubjectChange(this.value)">
@@ -46,15 +68,13 @@
           <option value="NEW_SUBJECT" style="font-weight: bold; color: #007AFF;">+ Añadir nueva materia...</option>
         </select>
       </div>
-
       <div class="field">
         <label>Nota (0-10)</label>
         <input type="number" id="input-nota" step="0.1" placeholder="Ej: 9.5">
       </div>
-
       <div class="modal-footer">
         <button onclick="closeModal()" class="btn-secondary">Cancelar</button>
-        <button onclick="saveGrade()" class="btn-primary">Guardar Nota</button>
+        <button onclick="saveGrade()" class="btn-primary">Guardar</button>
       </div>
     </div>
   </div>
