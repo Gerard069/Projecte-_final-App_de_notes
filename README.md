@@ -1,6 +1,6 @@
 # Projecte-_final-App_de_notes
 
-En aquest repositori trobaràs tota la informació, dissenys i esquemes que s'han fet servir per a la creació d'una **App de gestió i rendiment acadèmic** d'alt rendiment. L'aplicació compta amb una interfície nativa inspirada en el disseny minimalista d'iOS, optimitzada completament per a dispositius mòbils en format de targetes exclusives i navegació fluida per pestanyes.
+En aquest repositori trobaràs tota la informació, dissenys i esquemes que s'han fet servir per a la creació d'una **App de gestió i rendiment acadèmic** d'alt rendiment. L'aplicació compta amb una interfície nativa inspirada en el disseny minimalista d'iOS i altres sistemes operatius, optimitzada completament per a dispositius mòbils en format de targetes exclusives i navegació fluida amb cantonades redondejades simulant la proporció aurea utilitzada en dissenys de apple per pestanyes i nuvols.
 
 ---
 
@@ -41,4 +41,4 @@ Per muntar tota l'estructura de components i aconseguir que els càlculs funcion
 
 ## Objectiu del projecte
 
-He fet aquesta app per aprendre a programar coses útils per al dia a dia de l'institut i per tenir una motivació extra amb el sistema de rangs per arribar a ser "Llegenda" a totes les matèries.
+Hem fet aquesta app per aprendre a programar coses útils per al dia a dia de l'institut i per tenir una motivació extra amb el sistema de rangs per arribar a ser "Llegenda" a totes les matèries. A mes ens motivarà encara mes si comparem rangs i vilem suoerar als nostres amisc que tinguin la app també.
