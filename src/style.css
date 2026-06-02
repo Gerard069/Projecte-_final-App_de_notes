@@ -22,9 +22,17 @@ body {
   position: relative; 
   border-radius: 40px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  box-sizing: border-box;
 }
 
-.view { width: 100%; height: calc(100% - 85px); overflow-y: auto; display: block; }
+.view { 
+  width: 100%; 
+  height: calc(100% - 85px); 
+  overflow-y: auto; 
+  display: block; 
+  box-sizing: border-box; 
+  padding-bottom: 20px;
+}
 .hidden { display: none !important; }
 
 .status-bar { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 25px 10px 5px; font-size: 11px; color: #8E8E93; }
@@ -36,15 +44,25 @@ body {
 .label { font-size: 11px; font-weight: 600; opacity: 0.8; text-transform: uppercase; }
 
 .tab-bar {
-  position: absolute; bottom: 0; width: 100%; height: 85px;
-  background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px);
-  border-top: 0.5px solid #C6C6C8; display: flex; justify-content: space-around; padding-top: 12px;
-  z-index: 10;
+  position: absolute; 
+  bottom: 0; 
+  left: 0;
+  width: 100%; 
+  height: 85px;
+  background: rgba(255, 255, 255, 0.94); 
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 0.5px solid #C6C6C8; 
+  display: flex; 
+  justify-content: space-around; 
+  padding-top: 12px;
+  z-index: 99; 
+  box-sizing: border-box;
 }
-.tab-item { display: flex; flex-direction: column; align-items: center; color: #8E8E93; cursor: pointer; width: 50%; }
-.tab-item i { font-size: 24px; margin-bottom: 4px; }
+.tab-item { display: flex; flex-direction: column; align-items: center; color: #8E8E93; cursor: pointer; width: 25%; }
+.tab-item i { font-size: 22px; margin-bottom: 4px; }
 .tab-item span { font-size: 10px; }
-.tab-item.active { color: var(--ios-blue); }
+.tab-item.active { color: #007AFF; }
 
 .rank-card {
   background: white; margin: 10px 15px; padding: 15px; border-radius: 18px;
@@ -53,7 +71,7 @@ body {
 .rank-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
 
 .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.btn-main { background: none; border: none; color: var(--ios-blue); font-weight: 600; font-size: 16px; cursor: pointer; }
+.btn-main { background: none; border: none; color: #007AFF; font-weight: 600; font-size: 16px; cursor: pointer; }
 .add-task-btn { background: #E5E5EA; border: none; border-radius: 50%; width: 28px; height: 28px; color: var(--ios-blue); font-weight: bold; cursor: pointer; }
 
 .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(8px); }
@@ -65,5 +83,6 @@ select, input { width: 100%; padding: 12px; border-radius: 12px; border: 1px sol
 .btn-secondary { flex: 1; padding: 12px; border: none; border-radius: 12px; background: #E5E5EA; font-weight: 600; cursor: pointer; }
 
 .grade-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 0.5px solid #F2F2F7; color: #1c1c1e; }
-.task-item { display: flex; align-items: center; padding: 12px 0; list-style: none; color: #1c1c1e; }
-.checkbox { width: 20px; height: 20px; border: 2px solid #C7C7CC; border-radius: 50%; margin-right: 12px; }
+.task-item { display: flex; align-items: center; padding: 12px 0; list-style: none; color: #1c1c1e; cursor: pointer; }
+.checkbox { width: 20px; height: 20px; border: 2px solid #C7C7CC; border-radius: 50%; margin-right: 12px; transition: background 0.2s; }
+.task-item:hover .checkbox { background: #34C759; border-color: #34C759; }
