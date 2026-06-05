@@ -1,88 +1,115 @@
+/* Variables del sistema de diseño (Colores globales reutilizables) */
 :root {
-  --ios-blue: #000000;
-  --ios-bg: #F2F2F7;
-  --card: #FFFFFF;
+  --ios-blue: #000000; /* Color de contraste principal */
+  --ios-bg: #F2F2F7; /* Color de fondo gris claro de la app (Estilo iOS) */
+  --card: #FFFFFF; /* Fondo blanco de los componentes o widgets */
 }
 
-body { 
-  margin: 0; 
-  background-color: #1c1c1e; 
+/* Configuración básica del lienzo completo del navegador */
+body {
+  margin: 0;
+  background-color: #1c1c1e; /* Fondo oscuro exterior para simular entorno */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+  justify-content: center; /* Centra la aplicación horizontalmente */
+  align-items: center; /* Centra la aplicación verticalmente */
+  min-height: 100vh; /* Ocupa todo el alto de la pantalla disponible */
 }
 
+/* Contenedor que simula las dimensiones físicas de un teléfono móvil moderno */
 #app {
-  width: 375px; 
-  height: 812px; 
+  width: 375px;
+  height: 812px;
   background: var(--ios-bg);
-  overflow: hidden; 
-  position: relative; 
-  border-radius: 40px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  overflow: hidden; /* Evita que los contenidos se salgan de las esquinas redondeadas */
+  position: relative; /* Obligatorio para posicionar elementos internos de forma absoluta */
+  border-radius: 40px; /* Esquinas suavizadas de estilo smartphone */
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4); /* Sombra difuminada externa */
   box-sizing: border-box;
 }
 
-.view { 
-  width: 100%; 
-  height: calc(100% - 85px); 
-  overflow-y: auto; 
-  display: block; 
-  box-sizing: border-box; 
+/* Formato general de cada pantalla individual de la aplicación */
+.view {
+  width: 100%;
+  height: calc(100% - 85px); /* Resta el espacio inferior que ocupa la barra de pestañas */
+  overflow-y: auto; /* Permite hacer scroll interno si el contenido supera la pantalla */
+  display: block;
+  box-sizing: border-box;
   padding-bottom: 20px;
 }
+
+/* Utilidad global para ocultar elementos de la pantalla de manera absoluta */
 .hidden { display: none !important; }
 
+/* Formato de la barra superior pequeña de sincronización */
 .status-bar { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 25px 10px 5px; font-size: 11px; color: #8E8E93; }
+
+/* El punto de color interactivo que indica el estado del servidor */
 .dot { width: 6px; height: 6px; border-radius: 50%; transition: 0.3s; }
 
+/* Estructura común tipo tarjeta blanca para los paneles de información */
 .widget { background: var(--card); border-radius: 20px; margin: 15px; padding: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+
+/* Variación del widget para la tarjeta de promedio principal con fondo negro */
 .average-card { background: var(--ios-blue); color: white; text-align: center; }
 .average-card h2 { font-size: 58px; margin: 8px 0; font-weight: 800; }
 .label { font-size: 11px; font-weight: 600; opacity: 0.8; text-transform: uppercase; }
 
+/* Barra inferior de navegación flotante */
 .tab-bar {
-  position: absolute; 
-  bottom: 0; 
+  position: absolute;
+  bottom: 0;
   left: 0;
-  width: 100%; 
+  width: 100%;
   height: 85px;
-  background: rgba(255, 255, 255, 0.94); 
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 0.5px solid #C6C6C8; 
-  display: flex; 
-  justify-content: space-around; 
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(20px); /* Efecto cristal translúcido esmerilado */
+  -webkit-backdrop-filter: blur(20px); /* Compatibilidad con navegadores Safari */
+  border-top: 0.5px solid #C6C6C8; /* Línea fina divisoria superior */
+  display: flex;
+  justify-content: space-around;
   padding-top: 12px;
-  z-index: 99; 
+  z-index: 99; /* Posiciona la barra siempre arriba de los contenidos */
   box-sizing: border-box;
 }
+
+/* Cada uno de los botones individuales del menú inferior */
 .tab-item { display: flex; flex-direction: column; align-items: center; color: #8E8E93; cursor: pointer; width: 25%; }
 .tab-item i { font-size: 22px; margin-bottom: 4px; }
 .tab-item span { font-size: 10px; }
-.tab-item.active { color: #007AFF; }
+.tab-item.active { color: #007AFF; } /* Color azul del ícono cuando está seleccionado */
 
+/* Tarjetas horizontales de la pestaña "Mis Rangos" */
 .rank-card {
   background: white; margin: 10px 15px; padding: 15px; border-radius: 18px;
   display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
+
+/* Cuadrado redondeado contenedor de los emojis en los Rangos */
 .rank-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
 
+/* Filas superiores de widgets que contienen títulos y acciones alineadas */
 .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 .btn-main { background: none; border: none; color: #007AFF; font-weight: 600; font-size: 16px; cursor: pointer; }
 .add-task-btn { background: #E5E5EA; border: none; border-radius: 50%; width: 28px; height: 28px; color: var(--ios-blue); font-weight: bold; cursor: pointer; }
 
+/* Fondo oscuro difuminado detrás del formulario modal emergente */
 .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(8px); }
 .modal-content { background: white; width: 80%; padding: 25px; border-radius: 24px; }
 
+/* Reglas comunes de estilización para menús desplegables e inputs de texto */
 select, input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #E5E5EA; background: #F2F2F7; margin-top: 5px; box-sizing: border-box; font-size: 16px; outline: none; }
 .modal-footer { display: flex; gap: 10px; margin-top: 20px; }
 .btn-primary { flex: 2; padding: 12px; border: none; border-radius: 12px; background: var(--ios-blue); color: white; font-weight: 600; cursor: pointer; }
 .btn-secondary { flex: 1; padding: 12px; border: none; border-radius: 12px; background: #E5E5EA; font-weight: 600; cursor: pointer; }
 
+/* Filas individuales para listar las calificaciones guardadas */
 .grade-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 0.5px solid #F2F2F7; color: #1c1c1e; }
+
+/* Filas individuales para listar los textos de tareas pendientes */
 .task-item { display: flex; align-items: center; padding: 12px 0; list-style: none; color: #1c1c1e; cursor: pointer; }
+
+/* Pequeño círculo vacío interactivo que funciona como checkbox para completar la tarea */
 .checkbox { width: 20px; height: 20px; border: 2px solid #C7C7CC; border-radius: 50%; margin-right: 12px; transition: background 0.2s; }
+/* Efecto hover: Al pasar por encima, el checkbox cambia a verde simulando éxito */
 .task-item:hover .checkbox { background: #34C759; border-color: #34C759; }
