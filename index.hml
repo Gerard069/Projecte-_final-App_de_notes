@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App de Notes</title>
+  <link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+
 <div id="app">
 
   <div class="status-bar">
@@ -137,3 +147,8 @@
 <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-firestore-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="src/script.js"></script>
+
+</body>
+</html>
