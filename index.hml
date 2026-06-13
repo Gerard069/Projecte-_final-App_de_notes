@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>App de Notes</title>
 
-  <!-- CSS (ruta correcta desde raíz del repo) -->
+  <!-- CSS -->
   <link rel="stylesheet" href="./src/style.css">
 
-  <!-- FontAwesome -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
@@ -18,17 +18,19 @@
 
   <div class="status-bar">
     <span id="sync-text">Conectando...</span>
-    <div class="dot" id="sync-dot" style="background: #FF9500;"></div>
+    <div class="dot" id="sync-dot"></div>
   </div>
 
+  <!-- HOME -->
   <section id="view-home" class="view">
     <main>
+
       <div class="widget average-card">
         <span class="label">MI NOTA MEDIA</span>
         <h2 id="media-display">0.0</h2>
       </div>
 
-      <div class="widget chart-container" style="height: 180px; position: relative;">
+      <div class="widget chart-container" style="height:180px; position:relative;">
         <canvas id="gradeChart"></canvas>
       </div>
 
@@ -43,35 +45,35 @@
       <div class="widget task-widget">
         <div class="header-row">
           <h3>Tareas Pendientes</h3>
-          <button class="add-task-btn" onclick="addNewTask()">+</button>
+          <button onclick="addNewTask()">+</button>
         </div>
         <ul id="tasks-list"></ul>
       </div>
+
     </main>
   </section>
 
+  <!-- POMODORO -->
   <section id="view-pomodoro" class="view hidden">
-    <div class="header-padding">
-      <h2 style="margin: 20px 15px 5px; font-size: 28px; color: #1C1C1E;">Pomodoro Timer</h2>
-    </div>
+    <h2>Pomodoro Timer</h2>
 
-    <div class="widget pomodoro-widget" style="text-align:center; padding:30px 20px;">
-      <div id="pomo-display" style="font-size:64px;font-weight:800;">25:00</div>
-      <div id="pomo-status" style="font-size:14px;color:#8E8E93;">Modo: Estudio</div>
+    <div class="widget pomodoro-widget">
+      <div id="pomo-display">25:00</div>
+      <div id="pomo-status">Modo: Estudio</div>
 
-      <div style="display:flex;justify-content:center;gap:15px;margin:20px 0;">
-        <button onclick="startPomodoro()">Iniciar</button>
-        <button onclick="pausePomodoro()">Pausar</button>
-        <button onclick="resetPomodoro()">Reset</button>
-      </div>
+      <button onclick="startPomodoro()">Iniciar</button>
+      <button onclick="pausePomodoro()">Pausar</button>
+      <button onclick="resetPomodoro()">Reset</button>
     </div>
   </section>
 
+  <!-- RANKS -->
   <section id="view-ranks" class="view hidden">
     <h2>Mis Rangos</h2>
     <div id="ranks-container"></div>
   </section>
 
+  <!-- CHATBOT -->
   <section id="view-chatbot" class="view hidden">
     <h2>Guía de Estudio</h2>
 
@@ -81,6 +83,7 @@
     <button onclick="sendChatMessage()">Enviar</button>
   </section>
 
+  <!-- NAV -->
   <nav class="tab-bar">
     <div class="tab-item active" onclick="switchView('home', this)">Inicio</div>
     <div class="tab-item" onclick="switchView('pomodoro', this)">Pomodoro</div>
@@ -88,8 +91,10 @@
     <div class="tab-item" onclick="switchView('chatbot', this)">Chatbot</div>
   </nav>
 
+  <!-- MODAL -->
   <div id="modal-nota" class="modal-overlay hidden">
     <div class="modal-content">
+
       <h3>Nueva Calificación</h3>
 
       <select id="select-materia">
@@ -101,17 +106,18 @@
 
       <button onclick="closeModal()">Cancelar</button>
       <button onclick="saveGrade()">Guardar</button>
+
     </div>
   </div>
 
 </div>
 
-<!-- Firebase + Chart -->
+<!-- LIBRERÍAS -->
 <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-firestore-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- TU JS (ruta correcta desde raíz) -->
+<!-- JS -->
 <script src="./src/script.js"></script>
 
 </body>
